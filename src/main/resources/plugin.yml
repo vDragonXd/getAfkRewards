@@ -1,0 +1,8 @@
+name: getAfkRewards
+version: '${project.version}'
+main: me.gethertv.afkrewards.Main
+api-version: 1.18
+softdepend: [Multiverse-Core]
+commands:
+  afkzone:
+    aliases: [ azone ]

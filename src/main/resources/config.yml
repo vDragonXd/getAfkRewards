@@ -1,0 +1,17 @@
+# progress bar {bar}
+
+bar-format: "&8[{value}&8]"
+
+lang:
+  format: "&cCzas &f{time} &7 |  {bar}"
+  sub-title: "&a{value}%"
+  title: "&7"
+
+styles:
+  char: "I"
+  size: 100
+  no-active: "&7"
+  active: "&a"
+
+title: true
+actionbar: true
