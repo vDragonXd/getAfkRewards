@@ -4,7 +4,7 @@ Commands:
   /afkzone
 Alias:
   /azone
-
+  
 /azone selector - otrzymujesz selektor | receive selector
 /azone reload - przeladowanie pluginu | plugin reload
 /azone create <nazwa> - tworzenie zaznaczonego regionu | create selected region
