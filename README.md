@@ -14,7 +14,7 @@ Config:
 lang:
   format: "&cCzas &f{time}"
 
-# progress bar {bar}
+// progress bar {bar}
 
 bar-format: "&8[{value}&8]"
 
