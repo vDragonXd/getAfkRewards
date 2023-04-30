@@ -9,12 +9,13 @@ Alias:
 /azone reload - przeladowanie pluginu | plugin reload
 /azone create <nazwa> - tworzenie zaznaczonego regionu | create selected region
 
+```yaml
 Config:
 
 lang:
   format: "&cCzas &f{time}"
 
-// progress bar {bar}
+# progress bar {bar}
 
 bar-format: "&8[{value}&8]"
 
@@ -31,3 +32,4 @@ styles:
 
 title: true
 actionbar: true
+```
