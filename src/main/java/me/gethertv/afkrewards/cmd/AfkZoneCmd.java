@@ -46,6 +46,9 @@ public class AfkZoneCmd implements CommandExecutor {
                 Main.getInstance().getConfig().set("afk."+name+".second", Main.getSecond());
                 Main.getInstance().getConfig().set("afk."+name+".commands", new ArrayList<>());
                 Main.getInstance().getConfig().set("afk."+name+".time", 600);
+                Main.getInstance().getConfig().set("afk."+name+".p-color", "RED");
+                Main.getInstance().getConfig().set("afk."+name+".p-style", "SOLID");
+                Main.getInstance().getConfig().set("afk."+name+".bar-name", "&cNagroda za {time}");
                 Main.getInstance().saveConfig();
                 player.sendMessage(ColorFixer.addColors("&aPomyslnie dodano!"));
             }

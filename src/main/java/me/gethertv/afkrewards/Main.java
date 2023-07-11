@@ -3,6 +3,7 @@ package me.gethertv.afkrewards;
 import me.gethertv.afkrewards.cmd.AfkZoneCmd;
 import me.gethertv.afkrewards.data.AfkZone;
 import me.gethertv.afkrewards.data.Cuboid;
+import me.gethertv.afkrewards.data.User;
 import me.gethertv.afkrewards.event.ConnectPlayer;
 import me.gethertv.afkrewards.listeners.InteractionClick;
 import me.gethertv.afkrewards.runtask.CheckRegion;
@@ -10,6 +11,8 @@ import me.gethertv.afkrewards.utils.ColorFixer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,6 +35,7 @@ public final class Main extends JavaPlugin {
 
 
     private static CheckRegion checkRegion;
+    private HashMap<UUID, User> userData = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -90,11 +94,24 @@ public final class Main extends JavaPlugin {
             commands.addAll(getConfig().getStringList("afk."+name+".commands"));
             int time = getConfig().getInt("afk."+name+".time");
             Cuboid cuboid = new Cuboid(first, second);
-            checkRegion = new CheckRegion(new AfkZone(cuboid, commands, time));
+            checkRegion = new CheckRegion(
+                    new AfkZone(
+                        cuboid,
+                        commands,
+                        time,
+                        BarColor.valueOf(getConfig().getString("afk."+name+".p-color").toUpperCase()),
+                        BarStyle.valueOf(getConfig().getString("afk."+name+".p-style").toUpperCase()),
+                        getConfig().getString("afk."+name+".bar-name")
+                    )
+            );
             checkRegion.runTaskTimer(this, 20L, 20L);
             afkZoneList.add(checkRegion);
 
         }
+    }
+
+    public HashMap<UUID, User> getUserData() {
+        return userData;
     }
 
     public static CheckRegion getCheckRegion() {

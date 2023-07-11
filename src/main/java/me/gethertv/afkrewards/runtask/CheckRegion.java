@@ -2,8 +2,10 @@ package me.gethertv.afkrewards.runtask;
 
 import me.gethertv.afkrewards.Main;
 import me.gethertv.afkrewards.data.AfkZone;
+import me.gethertv.afkrewards.data.User;
 import me.gethertv.afkrewards.event.AfkRewardsDone;
 import me.gethertv.afkrewards.utils.ColorFixer;
+import me.gethertv.afkrewards.utils.Timer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -39,10 +41,17 @@ public class CheckRegion extends BukkitRunnable {
                 if(userdata.containsKey(player.getUniqueId()))
                     userdata.remove(player.getUniqueId());
 
+                User user = Main.getInstance().getUserData().remove(player.getUniqueId());
+                if(user!=null)
+                {
+                    user.destroy();
+                    Main.getInstance().getUserData().remove(player.getUniqueId());
+                }
                 continue;
             }
             if(userdata.get(player.getUniqueId())==null)
             {
+                Main.getInstance().getUserData().put(player.getUniqueId(),new User(player, afkZone));
                 userdata.put(player.getUniqueId(), System.currentTimeMillis()+(afkZone.getSecond()*1000));
                 continue;
             }
@@ -56,6 +65,7 @@ public class CheckRegion extends BukkitRunnable {
                     for(String cmd : afkZone.getCommands())
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("{player}", player.getName()));
 
+                    Main.getInstance().getUserData().remove(player.getUniqueId());
                     userdata.remove(player.getUniqueId());
                     continue;
                 }
@@ -63,8 +73,25 @@ public class CheckRegion extends BukkitRunnable {
             String value = getValue(userdata.get(player.getUniqueId()));
             double valueTemp =  Double.parseDouble(value) *100;
             String procenty = String.format("%.2f", valueTemp);
+
+            if(Main.getInstance().getConfig().getBoolean("boss-bar"))
+            {
+                User user = Main.getInstance().getUserData().get(player.getUniqueId());
+                if(user!=null)
+                {
+                    double progress = (double) System.currentTimeMillis() / user.getFinishSecond();
+                    user.getBossBar().setProgress(progress);
+                    String text = afkZone.getBossName();
+                    int second = (int) (user.getFinishSecond() - System.currentTimeMillis()) / 1000;
+                    user.getBossBar().setTitle(ColorFixer.addColors(
+                            text.replace("{time}", Timer.getTime(second))
+                    ));
+                }
+
+            }
+
             if(Main.getInstance().getConfig().getBoolean("title"))
-                player.sendTitle(ColorFixer.addColors(Main.getInstance().getConfig().getString("lang.title").replace("{value}", procenty)), ColorFixer.addColors(Main.getInstance().getConfig().getString("lang.sub-title").replace("{value}", procenty)), 0, 22, 0);
+                player.sendTitle(ColorFixer.addColors(Main.getInstance().getConfig().getString("lang.title").replace("{value}", procenty)), ColorFixer.addColors(Main.getInstance().getConfig().getString("lang.sub-title").replace("{value}", procenty)), 10, 22, 10);
 
             if(Main.getInstance().getConfig().getBoolean("actionbar"))
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
